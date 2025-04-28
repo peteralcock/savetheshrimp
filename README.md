@@ -163,11 +163,3 @@ For support, please:
 2. Visit the [WordPress.org plugin support forum](https://wordpress.org/support/plugin/every-org-nonprofit-profile)
 3. Contact Every.org support at partners@every.org
 
-## License
-
-This plugin is licensed under the GPL v2 or later.
-
-## Credits
-
-Developed by Peter Alcock in partnership with Every.org.
-
