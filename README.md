@@ -89,16 +89,22 @@ The plugin integrates with the Every.org API v0.2 to fetch nonprofit data. It us
   * Supports filtering by causes
   * Limited to 50 results per request
   * Real-time search results
+  * Returns nonprofit name, profile URL, description, EIN, logo URL, and website URL
 
 * **Browse Nonprofits:** `GET /v0.2/browse/:cause`
   * Paginated results (up to 100 per page)
   * Filter by cause category
   * Includes pagination metadata
+  * Returns detailed nonprofit information including tags and location
 
 * **Nonprofit Details:** `GET /v0.2/nonprofit/:identifier`
   * Supports slugs, EINs, or nonprofit IDs
-  * Returns detailed nonprofit information
-  * Includes tags and cause categories
+  * Returns detailed nonprofit information including:
+    * Basic info (name, description, EIN)
+    * Media (logo, cover image)
+    * Location and NTEE code
+    * Tags and cause categories
+    * Profile and website URLs
 
 ### Rate Limits
 
@@ -113,10 +119,10 @@ The plugin implements caching to minimize API calls and stay within these limits
 
 The plugin uses PHP template files located in the `templates/` directory to render the different profile styles.
 
-* `nonprofit-standard.php`
-* `nonprofit-card.php`
-* `nonprofit-featured.php`
-* `nonprofit-minimal.php`
+* `nonprofit-standard.php`: Displays a full profile with cover image, logo, description, location, NTEE code, and tags
+* `nonprofit-card.php`: A compact card-style display
+* `nonprofit-featured.php`: A prominent featured display
+* `nonprofit-minimal.php`: A minimal display with essential information only
 
 These templates can be overridden by copying them into your theme's directory within a folder named `enpb-templates`. For example: `wp-content/themes/your-theme/enpb-templates/nonprofit-standard.php`.
 
@@ -162,5 +168,5 @@ This plugin is licensed under the GPL v2 or later.
 
 ## Credits
 
-Developed by [Your Name] in partnership with Every.org.
+Developed by Peter Alcock in partnership with Every.org.
 
