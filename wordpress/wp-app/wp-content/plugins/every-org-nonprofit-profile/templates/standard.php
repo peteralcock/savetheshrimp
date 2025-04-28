@@ -67,17 +67,19 @@ $websiteUrl = !empty($nonprofit['websiteUrl']) ? esc_url($nonprofit['websiteUrl'
             </div>
         <?php endif; ?>
 
-        <?php if (!empty($nonprofit['tags'])): ?>
+        <?php if (!empty($nonprofit['tags']) && is_array($nonprofit['tags'])): ?>
             <div class="enpb-tags">
                 <h3><?php _e('Causes', 'enpb'); ?></h3>
                 <div class="enpb-tags-list">
                     <?php foreach ($nonprofit['tags'] as $tag): ?>
-                        <a href="<?php echo esc_url($tag['url']); ?>" class="enpb-tag" target="_blank" rel="noopener noreferrer">
-                            <?php if (!empty($tag['imageUrl'])): ?>
-                                <img src="<?php echo esc_url($tag['imageUrl']); ?>" alt="<?php echo esc_attr($tag['title']); ?>" class="enpb-tag-icon">
-                            <?php endif; ?>
-                            <span><?php echo esc_html($tag['title']); ?></span>
-                        </a>
+                        <?php if (is_array($tag) && isset($tag['title'])): ?>
+                            <a href="<?php echo esc_url($tag['url']); ?>" class="enpb-tag" target="_blank" rel="noopener noreferrer">
+                                <?php if (!empty($tag['imageUrl'])): ?>
+                                    <img src="<?php echo esc_url($tag['imageUrl']); ?>" alt="<?php echo esc_attr($tag['title']); ?>" class="enpb-tag-icon">
+                                <?php endif; ?>
+                                <span><?php echo esc_html($tag['title']); ?></span>
+                            </a>
+                        <?php endif; ?>
                     <?php endforeach; ?>
                 </div>
             </div>

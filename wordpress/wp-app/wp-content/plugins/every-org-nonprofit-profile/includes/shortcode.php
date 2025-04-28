@@ -89,9 +89,22 @@ function enpb_nonprofit_profile_shortcode($atts) {
     $profileUrl = !empty($nonprofit['profileUrl']) ? $nonprofit['profileUrl'] : '';
     $websiteUrl = !empty($nonprofit['websiteUrl']) ? $nonprofit['websiteUrl'] : '';
     
-    // Remove any duplicate domains
-    $profileUrl = preg_replace('#^https?://[^/]+/https?://#', 'https://', $profileUrl);
-    $websiteUrl = preg_replace('#^https?://[^/]+/https?://#', 'https://', $websiteUrl);
+    // Clean up URLs
+    if (!empty($profileUrl)) {
+        // Remove any duplicate domains and ensure proper protocol
+        $profileUrl = preg_replace('#^https?://[^/]+/https?://#', 'https://', $profileUrl);
+        if (strpos($profileUrl, 'http') !== 0) {
+            $profileUrl = 'https://' . $profileUrl;
+        }
+    }
+    
+    if (!empty($websiteUrl)) {
+        // Remove any duplicate domains and ensure proper protocol
+        $websiteUrl = preg_replace('#^https?://[^/]+/https?://#', 'https://', $websiteUrl);
+        if (strpos($websiteUrl, 'http') !== 0) {
+            $websiteUrl = 'https://' . $websiteUrl;
+        }
+    }
     
     // Prepare attributes for template
     $template_atts = [
