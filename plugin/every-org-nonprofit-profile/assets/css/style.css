@@ -1,0 +1,651 @@
+/**
+ * Frontend styles for Nonprofit Profile block
+ */
+
+/* Common styles for all profiles */
+.enpb-nonprofit-profile {
+    margin: 0 0 30px;
+    max-width: 100%;
+    box-sizing: border-box;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.enpb-nonprofit-profile img {
+    max-width: 100%;
+    height: auto;
+}
+
+.enpb-nonprofit-profile h3,
+.enpb-nonprofit-profile h2 {
+    margin-top: 0;
+    line-height: 1.3;
+}
+
+.enpb-nonprofit-profile p {
+    margin: 0 0 15px;
+}
+
+.enpb-nonprofit-profile a {
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+/* Standard style */
+.enpb-style-standard {
+    border: 1px solid #e0e0e0;
+    padding: 25px;
+    border-radius: 8px;
+    max-width: 400px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.enpb-style-standard .enpb-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.enpb-style-standard .enpb-logo {
+    margin-right: 20px;
+    flex-shrink: 0;
+}
+
+.enpb-style-standard .enpb-logo-img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    border-radius: 8px;
+    background: white;
+    padding: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.enpb-style-standard .enpb-title {
+    flex: 1;
+}
+
+.enpb-style-standard .enpb-name {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: #333;
+}
+
+.enpb-style-standard .enpb-location {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #666;
+}
+
+.enpb-style-standard .enpb-location-icon {
+    margin-right: 5px;
+}
+
+.enpb-style-standard .enpb-description {
+    margin-bottom: 20px;
+    font-size: 15px;
+    color: #444;
+}
+
+.enpb-style-standard .enpb-tags {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 0 20px;
+}
+
+.enpb-style-standard .enpb-tag {
+    background: #f0f4f8;
+    color: #516f90;
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    margin: 0 8px 8px 0;
+    display: inline-block;
+}
+
+.enpb-style-standard .enpb-footer {
+    display: flex;
+    align-items: center;
+}
+
+.enpb-style-standard .enpb-donate-button {
+    display: inline-block;
+    padding: 10px 20px;
+    color: white;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 14px;
+    text-align: center;
+}
+
+.enpb-style-standard .enpb-donate-button:hover {
+    filter: brightness(90%);
+}
+
+.enpb-style-standard .enpb-learn-more {
+    margin-left: 15px;
+    color: #666;
+    font-size: 14px;
+}
+
+.enpb-style-standard .enpb-learn-more:hover {
+    color: #333;
+    text-decoration: underline;
+}
+
+/* Card style */
+.enpb-style-card {
+    border-radius: 12px;
+    overflow: hidden;
+    max-width: 340px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    background: white;
+}
+
+.enpb-style-card .enpb-card-image {
+    position: relative;
+    height: 160px;
+    background-color: #f5f7fa;
+}
+
+.enpb-style-card .enpb-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.enpb-style-card .enpb-card-logo {
+    position: absolute;
+    bottom: -25px;
+    left: 20px;
+    width: 70px;
+    height: 70px;
+    border-radius: 10px;
+    background: white;
+    padding: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.enpb-style-card .enpb-card-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.enpb-style-card .enpb-card-content {
+    padding: 30px 20px 20px;
+}
+
+.enpb-style-card .enpb-card-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 0 15px;
+    color: #2b3441;
+    padding-top: 10px;
+}
+
+.enpb-style-card .enpb-card-description {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #4a5568;
+    margin-bottom: 20px;
+}
+
+.enpb-style-card .enpb-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.enpb-style-card .enpb-card-tag {
+    background-color: #f1f5f9;
+    color: #475569;
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 30px;
+    margin: 0 8px 8px 0;
+}
+
+.enpb-style-card .enpb-more-tag {
+    background-color: #e2e8f0;
+    color: #64748b;
+}
+
+.enpb-style-card .enpb-card-donate {
+    display: block;
+    padding: 12px;
+    border-radius: 6px;
+    color: white;
+    font-weight: 600;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+.enpb-style-card .enpb-card-donate:hover {
+    filter: brightness(95%);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Featured style */
+.enpb-style-featured {
+    max-width: 500px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    background: white;
+}
+
+.enpb-style-featured .enpb-featured-cover {
+    position: relative;
+    height: 180px;
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.enpb-style-featured .enpb-featured-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.6));
+    z-index: 1;
+}
+
+.enpb-style-featured .enpb-featured-logo {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: white;
+    padding: 5px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    z-index: 2;
+}
+
+.enpb-style-featured .enpb-featured-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.enpb-style-featured .enpb-featured-name {
+    position: relative;
+    z-index: 2;
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 5px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    max-width: 80%;
+}
+
+.enpb-style-featured .enpb-featured-location {
+    position: relative;
+    z-index: 2;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.enpb-style-featured .enpb-featured-header-simple {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    background: #f0f4f8;
+}
+
+.enpb-style-featured .enpb-featured-logo-simple {
+    width: 70px;
+    height: 70px;
+    margin-right: 20px;
+    border-radius: 10px;
+    background: white;
+    padding: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+}
+
+.enpb-style-featured .enpb-featured-logo-simple img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.enpb-style-featured .enpb-featured-content {
+    padding: 25px;
+}
+
+.enpb-style-featured .enpb-featured-description {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #3a4554;
+    margin-bottom: 20px;
+}
+
+.enpb-style-featured .enpb-featured-tags {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+}
+
+.enpb-style-featured .enpb-featured-tag {
+    background: #edf2f7;
+    color: #4a5568;
+    font-size: 13px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    margin: 0 8px 8px 0;
+}
+
+.enpb-style-featured .enpb-featured-actions {
+    display: flex;
+    align-items: center;
+}
+
+.enpb-style-featured .enpb-featured-donate {
+    padding: 12px 25px;
+    border-radius: 6px;
+    color: white;
+    font-weight: 600;
+    display: inline-block;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    flex: 1;
+    transition: all 0.2s ease;
+}
+
+.enpb-style-featured .enpb-featured-donate:hover {
+    filter: brightness(95%);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.enpb-style-featured .enpb-featured-learn-more {
+    margin-left: 15px;
+    padding: 10px 20px;
+    border-radius: 6px;
+    color: #4a5568;
+    font-size: 14px;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s ease;
+}
+
+.enpb-style-featured .enpb-featured-learn-more:hover {
+    background: #f7fafc;
+    color: #2d3748;
+    border-color: #cbd5e0;
+}
+
+/* Minimal style */
+.enpb-style-minimal {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: white;
+    max-width: 600px;
+}
+
+.enpb-style-minimal .enpb-minimal-logo {
+    width: 50px;
+    height: 50px;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.enpb-style-minimal .enpb-minimal-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.enpb-style-minimal .enpb-minimal-info {
+    flex: 1;
+    min-width: 0;
+    margin-right: 15px;
+}
+
+.enpb-style-minimal .enpb-minimal-name {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 5px;
+    color: #2d3748;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.enpb-style-minimal .enpb-minimal-description {
+    font-size: 13px;
+    color: #718096;
+    margin: 0;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.enpb-style-minimal .enpb-minimal-action {
+    flex-shrink: 0;
+}
+
+.enpb-style-minimal .enpb-minimal-donate {
+    display: inline-block;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 600;
+    background-color: transparent;
+    border: 1px solid;
+    transition: all 0.2s ease;
+}
+
+.enpb-style-minimal .enpb-minimal-donate:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    transform: translateY(-1px);
+}
+
+/* Error messages */
+.enpb-error {
+    padding: 12px 15px;
+    background-color: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+    border-radius: 5px;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+/* Loading states */
+.enpb-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    background: #f9fafb;
+    border-radius: 5px;
+    border: 1px dashed #cbd5e0;
+}
+
+.enpb-loading-spinner {
+    border: 3px solid #e2e8f0;
+    border-top: 3px solid #4299e1;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    animation: enpb-spin 1s linear infinite;
+    margin-right: 10px;
+}
+
+@keyframes enpb-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Donation progress (for frontend.js functionality) */
+.enpb-donation-progress-container {
+    margin: 15px 0;
+}
+
+.enpb-donation-progress {
+    background: #f1f5f9;
+    border-radius: 10px;
+    height: 8px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.enpb-donation-bar {
+    height: 100%;
+    background: linear-gradient(to right, #38bdf8, #3b82f6);
+    border-radius: 10px;
+    transition: width 1s ease;
+}
+
+.enpb-donation-stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #64748b;
+}
+
+/* Tooltip styles */
+.enpb-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.enpb-tooltip .enpb-tooltip-text {
+    visibility: hidden;
+    width: 160px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 4px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -80px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 12px;
+}
+
+.enpb-tooltip .enpb-tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+}
+
+.enpb-tooltip:hover .enpb-tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Expand/collapse description */
+.enpb-expand-description {
+    color: #3b82f6;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.enpb-expand-description:hover {
+    text-decoration: underline;
+}
+
+/* Hover effects */
+.enpb-tag:hover,
+.enpb-card-tag:hover,
+.enpb-featured-tag:hover {
+    cursor: pointer;
+    filter: brightness(95%);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 600px) {
+    .enpb-style-featured .enpb-featured-actions {
+        flex-direction: column;
+    }
+    
+    .enpb-style-featured .enpb-featured-learn-more {
+        margin-left: 0;
+        margin-top: 10px;
+        text-align: center;
+    }
+    
+    .enpb-style-minimal {
+        flex-wrap: wrap;
+    }
+    
+    .enpb-style-minimal .enpb-minimal-info {
+        width: calc(100% - 65px);
+        margin-bottom: 15px;
+    }
+    
+    .enpb-style-minimal .enpb-minimal-action {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .enpb-style-minimal .enpb-minimal-donate {
+        width: 100%;
+    }
+}
+
+/* Print styles */
+@media print {
+    .enpb-nonprofit-profile {
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+    }
+    
+    .enpb-donate-button,
+    .enpb-card-donate,
+    .enpb-featured-donate,
+    .enpb-minimal-donate,
+    .enpb-learn-more,
+    .enpb-featured-learn-more {
+        display: none !important;
+    }
+}
+
+/* Animations */
+@keyframes enpb-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.enpb-nonprofit-profile {
+    animation: enpb-fade-in 0.5s ease;
+}
+
+/* Accessibility improvements */
+.enpb-nonprofit-profile a:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+.enpb-nonprofit-profile a:focus:not(:focus-visible) {
+    outline: none;
+}

@@ -1,0 +1,896 @@
+/**
+ * Enhanced Every.org Nonprofit Profile Block
+ */
+
+const { registerBlockType } = wp.blocks;
+const { __ } = wp.i18n;
+const { useState, useEffect } = wp.element;
+const { 
+    TextControl, 
+    Button, 
+    Spinner, 
+    PanelBody, 
+    SelectControl,
+    ToggleControl,
+    RangeControl,
+    ColorPalette,
+    Placeholder,
+} = wp.components;
+const { InspectorControls } = wp.blockEditor;
+
+// Register the block
+registerBlockType('enpb/nonprofit-profile', {
+    title: __('Nonprofit Profile', 'enpb'),
+    icon: 'heart',
+    category: 'nonprofit-tools',
+    keywords: [__('nonprofit', 'enpb'), __('charity', 'enpb'), __('donation', 'enpb'), __('every.org', 'enpb')],
+    attributes: {
+        nonprofitId: { type: 'string' },
+        name: { type: 'string' },
+        description: { type: 'string' },
+        logoUrl: { type: 'string' },
+        profileUrl: { type: 'string' },
+        coverImageUrl: { type: 'string' },
+        location: { type: 'string' },
+        tags: { type: 'array', default: [] },
+        blockStyle: { type: 'string', default: 'standard' },
+        ctaText: { type: 'string', default: enpbData.strings.donateNow || 'Donate Now' },
+        ctaColor: { type: 'string', default: '#007bff' },
+        showStats: { type: 'boolean', default: true },
+        showTags: { type: 'boolean', default: true },
+        showDescription: { type: 'boolean', default: true },
+        descriptionLength: { type: 'number', default: 150 },
+    },
+    
+    edit: function(props) {
+        const { attributes, setAttributes } = props;
+        const [query, setQuery] = useState('');
+        const [searchResults, setSearchResults] = useState([]);
+        const [loading, setLoading] = useState(false);
+        const [searchPending, setSearchPending] = useState(false);
+        const [selectedNonprofit, setSelectedNonprofit] = useState(null);
+        const [searchError, setSearchError] = useState(null);
+        const [causes, setCauses] = useState([]);
+        const [selectedCause, setSelectedCause] = useState('');
+        
+        // Set up the selected nonprofit from attributes when component mounts
+        useEffect(() => {
+            if (attributes.nonprofitId && !selectedNonprofit) {
+                setSelectedNonprofit({
+                    id: attributes.nonprofitId,
+                    name: attributes.name,
+                    description: attributes.description,
+                    logoUrl: attributes.logoUrl,
+                    profileUrl: attributes.profileUrl,
+                    coverImageUrl: attributes.coverImageUrl,
+                    location: attributes.location,
+                    tags: attributes.tags,
+                });
+            }
+            
+            // Fetch available causes
+            if (causes.length === 0) {
+                wp.apiFetch({ path: '/enpb/v1/causes' }).then(response => {
+                    if (response && response.causes) {
+                        const causeOptions = [
+                            { label: __('All Causes', 'enpb'), value: '' }
+                        ];
+                        
+                        Object.entries(response.causes).forEach(([key, label]) => {
+                            causeOptions.push({ label, value: key });
+                        });
+                        
+                        setCauses(causeOptions);
+                    }
+                }).catch(error => {
+                    console.error('Error fetching causes:', error);
+                });
+            }
+        }, []);
+        
+        // Search for nonprofits with debounce
+        useEffect(() => {
+            if (searchPending) {
+                const timer = setTimeout(() => {
+                    searchNonprofits();
+                    setSearchPending(false);
+                }, 500);
+                
+                return () => clearTimeout(timer);
+            }
+        }, [searchPending, query, selectedCause]);
+        
+        const searchNonprofits = async () => {
+            if (query.length < 2) {
+                setSearchResults([]);
+                return;
+            }
+            
+            setLoading(true);
+            setSearchError(null);
+            
+            try {
+                let path = `/enpb/v1/search?query=${encodeURIComponent(query)}`;
+                
+                if (selectedCause) {
+                    path += `&causes=${selectedCause}`;
+                }
+                
+                const response = await wp.apiFetch({ path });
+                
+                if (response && response.nonprofits) {
+                    setSearchResults(response.nonprofits);
+                } else {
+                    setSearchError(__('No nonprofits found. Try a different search term.', 'enpb'));
+                }
+            } catch (error) {
+                console.error('Error searching nonprofits:', error);
+                setSearchError(__('Error connecting to Every.org API. Please check your API key.', 'enpb'));
+            }
+            
+            setLoading(false);
+        };
+        
+        const selectNonprofit = async (nonprofit) => {
+            setLoading(true);
+            
+            try {
+                const response = await wp.apiFetch({ path: `/enpb/v1/nonprofit/${nonprofit.id}` });
+                
+                if (response && response.data) {
+                    const data = response.data;
+                    
+                    // Update selected nonprofit with additional data
+                    const enhancedNonprofit = {
+                        ...nonprofit,
+                        description: data.description || nonprofit.description,
+                        coverImageUrl: data.coverImageUrl || '',
+                        tags: data.tags || [],
+                        location: data.location || nonprofit.location || '',
+                    };
+                    
+                    setSelectedNonprofit(enhancedNonprofit);
+                    
+                    // Update attributes
+                    setAttributes({
+                        nonprofitId: enhancedNonprofit.id,
+                        name: enhancedNonprofit.name,
+                        description: enhancedNonprofit.description,
+                        logoUrl: enhancedNonprofit.logoUrl,
+                        profileUrl: enhancedNonprofit.profileUrl,
+                        coverImageUrl: enhancedNonprofit.coverImageUrl,
+                        tags: enhancedNonprofit.tags,
+                        location: enhancedNonprofit.location,
+                    });
+                }
+            } catch (error) {
+                console.error('Error fetching nonprofit details:', error);
+            }
+            
+            setLoading(false);
+        };
+        
+        const handleQueryChange = (value) => {
+            setQuery(value);
+            setSearchPending(true);
+        };
+        
+        const handleCauseChange = (value) => {
+            setSelectedCause(value);
+            setSearchPending(true);
+        };
+        
+        const resetSelection = () => {
+            setSelectedNonprofit(null);
+            setAttributes({
+                nonprofitId: '',
+                name: '',
+                description: '',
+                logoUrl: '',
+                profileUrl: '',
+                coverImageUrl: '',
+                tags: [],
+                location: '',
+            });
+        };
+        
+        // Styles for the preview
+        const previewStyles = {
+            standard: {
+                container: {
+                    border: '1px solid #ccc',
+                    padding: '20px',
+                    borderRadius: '5px',
+                    maxWidth: '300px',
+                },
+                header: {
+                    display: 'flex',
+                    alignItems: 'center',
+                    marginBottom: '15px',
+                },
+                logo: {
+                    width: '60px',
+                    height: '60px',
+                    marginRight: '15px',
+                    objectFit: 'contain',
+                },
+                name: {
+                    fontSize: '18px',
+                    fontWeight: 'bold',
+                    margin: '0 0 5px 0',
+                },
+                description: {
+                    fontSize: '14px',
+                    margin: '10px 0',
+                },
+                tags: {
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    margin: '10px 0',
+                },
+                tag: {
+                    background: '#f0f0f0',
+                    padding: '3px 8px',
+                    borderRadius: '3px',
+                    fontSize: '12px',
+                    marginRight: '5px',
+                    marginBottom: '5px',
+                },
+                button: {
+                    display: 'inline-block',
+                    padding: '8px 15px',
+                    textDecoration: 'none',
+                    color: 'white',
+                    borderRadius: '3px',
+                    fontSize: '14px',
+                },
+            },
+            card: {
+                container: {
+                    border: '1px solid #e0e0e0',
+                    borderRadius: '8px',
+                    overflow: 'hidden',
+                    maxWidth: '300px',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                },
+                coverImage: {
+                    width: '100%',
+                    height: '120px',
+                    objectFit: 'cover',
+                    backgroundColor: '#f5f5f5',
+                },
+                logoOverlay: {
+                    marginTop: '-30px',
+                    marginLeft: '20px',
+                    width: '60px',
+                    height: '60px',
+                    borderRadius: '50%',
+                    border: '3px solid white',
+                    overflow: 'hidden',
+                    backgroundColor: 'white',
+                },
+                logo: {
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain',
+                },
+                content: {
+                    padding: '15px 20px',
+                },
+                name: {
+                    fontSize: '18px',
+                    fontWeight: 'bold',
+                    margin: '10px 0',
+                },
+                description: {
+                    fontSize: '14px',
+                    color: '#555',
+                    margin: '10px 0',
+                },
+                tags: {
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    margin: '15px 0 10px',
+                },
+                tag: {
+                    background: '#f0f0f0',
+                    padding: '3px 8px',
+                    borderRadius: '12px',
+                    fontSize: '12px',
+                    marginRight: '5px',
+                    marginBottom: '5px',
+                },
+                button: {
+                    display: 'block',
+                    padding: '10px',
+                    textAlign: 'center',
+                    textDecoration: 'none',
+                    color: 'white',
+                    borderRadius: '5px',
+                    fontSize: '14px',
+                    width: '100%',
+                    marginTop: '15px',
+                },
+            },
+            featured: {
+                container: {
+                    border: '1px solid #e0e0e0',
+                    borderRadius: '8px',
+                    overflow: 'hidden',
+                    maxWidth: '400px',
+                    boxShadow: '0 3px 10px rgba(0,0,0,0.1)',
+                },
+                coverContainer: {
+                    position: 'relative',
+                    height: '150px',
+                    backgroundColor: '#f5f5f5',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'flex-end',
+                    padding: '20px',
+                    color: 'white',
+                },
+                coverOverlay: {
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundColor: 'rgba(0,0,0,0.4)',
+                    zIndex: 1,
+                },
+                logoOverlay: {
+                    position: 'absolute',
+                    top: '20px',
+                    right: '20px',
+                    width: '60px',
+                    height: '60px',
+                    borderRadius: '50%',
+                    overflow: 'hidden',
+                    backgroundColor: 'white',
+                    border: '3px solid white',
+                    zIndex: 2,
+                },
+                logo: {
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain',
+                },
+                nameContainer: {
+                    position: 'relative',
+                    zIndex: 2,
+                },
+                name: {
+                    fontSize: '24px',
+                    fontWeight: 'bold',
+                    margin: '0 0 5px 0',
+                    textShadow: '0 1px 3px rgba(0,0,0,0.3)',
+                },
+                location: {
+                    fontSize: '14px',
+                    margin: '0',
+                    opacity: 0.9,
+                },
+                content: {
+                    padding: '20px',
+                },
+                description: {
+                    fontSize: '14px',
+                    lineHeight: '1.5',
+                    margin: '0 0 15px 0',
+                },
+                tags: {
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    margin: '15px 0',
+                },
+                tag: {
+                    background: '#f0f0f0',
+                    padding: '4px 10px',
+                    borderRadius: '15px',
+                    fontSize: '12px',
+                    marginRight: '6px',
+                    marginBottom: '6px',
+                },
+                actions: {
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    marginTop: '20px',
+                },
+                button: {
+                    display: 'inline-block',
+                    padding: '10px 20px',
+                    textDecoration: 'none',
+                    color: 'white',
+                    borderRadius: '5px',
+                    fontSize: '14px',
+                    fontWeight: 'bold',
+                    flex: '1',
+                    textAlign: 'center',
+                },
+                learnMore: {
+                    display: 'inline-block',
+                    padding: '10px 20px',
+                    textDecoration: 'none',
+                    color: '#333',
+                    borderRadius: '5px',
+                    fontSize: '14px',
+                    border: '1px solid #ddd',
+                    marginLeft: '10px',
+                    textAlign: 'center',
+                },
+            },
+            minimal: {
+                container: {
+                    display: 'flex',
+                    alignItems: 'center',
+                    padding: '15px',
+                    border: '1px solid #e0e0e0',
+                    borderRadius: '5px',
+                    maxWidth: '500px',
+                },
+                logo: {
+                    width: '50px',
+                    height: '50px',
+                    marginRight: '15px',
+                    objectFit: 'contain',
+                },
+                content: {
+                    flex: '1',
+                },
+                name: {
+                    fontSize: '16px',
+                    fontWeight: 'bold',
+                    margin: '0 0 5px 0',
+                },
+                description: {
+                    fontSize: '13px',
+                    margin: '0',
+                    color: '#555',
+                },
+                button: {
+                    display: 'inline-block',
+                    padding: '8px 15px',
+                    textDecoration: 'none',
+                    fontSize: '13px',
+                    borderRadius: '5px',
+                    marginLeft: '15px',
+                    backgroundColor: 'transparent',
+                    border: '1px solid',
+                },
+            },
+        };
+        
+        // Render preview based on selected style
+        const renderPreview = () => {
+            const {
+                blockStyle,
+                name,
+                logoUrl,
+                description,
+                profileUrl,
+                coverImageUrl,
+                tags,
+                location,
+                ctaText,
+                ctaColor,
+                showDescription,
+                showTags,
+                descriptionLength,
+            } = attributes;
+            
+            const style = previewStyles[blockStyle] || previewStyles.standard;
+            
+            // Process description for display
+            let displayDescription = '';
+            if (showDescription && description) {
+                displayDescription = description.length > descriptionLength
+                    ? description.substring(0, descriptionLength) + '...'
+                    : description;
+            }
+            
+            // Define common button style
+            const buttonStyle = {
+                ...style.button,
+                backgroundColor: ctaColor,
+            };
+            
+            if (blockStyle === 'minimal') {
+                buttonStyle.backgroundColor = 'transparent';
+                buttonStyle.color = ctaColor;
+                buttonStyle.borderColor = ctaColor;
+            }
+            
+            // Render based on style
+            switch (blockStyle) {
+                case 'card':
+                    return (
+                        <div style={style.container}>
+                            {(coverImageUrl || logoUrl) && (
+                                <div>
+                                    <img 
+                                        src={coverImageUrl || logoUrl} 
+                                        alt={name} 
+                                        style={style.coverImage} 
+                                    />
+                                    
+                                    {coverImageUrl && logoUrl && (
+                                        <div style={style.logoOverlay}>
+                                            <img 
+                                                src={logoUrl} 
+                                                alt={name + " logo"} 
+                                                style={style.logo} 
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                            
+                            <div style={style.content}>
+                                <h3 style={style.name}>{name}</h3>
+                                
+                                {showDescription && displayDescription && (
+                                    <p style={style.description}>{displayDescription}</p>
+                                )}
+                                
+                                {showTags && tags && tags.length > 0 && (
+                                    <div style={style.tags}>
+                                        {tags.slice(0, 3).map((tag, index) => (
+                                            <span key={index} style={style.tag}>{tag}</span>
+                                        ))}
+                                        {tags.length > 3 && (
+                                            <span style={{...style.tag, backgroundColor: '#e0e0e0'}}>+{tags.length - 3}</span>
+                                        )}
+                                    </div>
+                                )}
+                                
+                                <a 
+                                    href={`${profileUrl}/donate`} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    style={buttonStyle}
+                                >
+                                    {ctaText}
+                                </a>
+                            </div>
+                        </div>
+                    );
+                
+                case 'featured':
+                    return (
+                        <div style={style.container}>
+                            <div 
+                                style={{
+                                    ...style.coverContainer,
+                                    backgroundImage: coverImageUrl ? `url(${coverImageUrl})` : 'none',
+                                }}
+                            >
+                                <div style={style.coverOverlay}></div>
+                                
+                                {logoUrl && (
+                                    <div style={style.logoOverlay}>
+                                        <img 
+                                            src={logoUrl} 
+                                            alt={name + " logo"} 
+                                            style={style.logo} 
+                                        />
+                                    </div>
+                                )}
+                                
+                                <div style={style.nameContainer}>
+                                    <h2 style={style.name}>{name}</h2>
+                                    
+                                    {location && (
+                                        <p style={style.location}>{location}</p>
+                                    )}
+                                </div>
+                            </div>
+                            
+                            <div style={style.content}>
+                                {showDescription && displayDescription && (
+                                    <p style={style.description}>{displayDescription}</p>
+                                )}
+                                
+                                {showTags && tags && tags.length > 0 && (
+                                    <div style={style.tags}>
+                                        {tags.map((tag, index) => (
+                                            <span key={index} style={style.tag}>{tag}</span>
+                                        ))}
+                                    </div>
+                                )}
+                                
+                                <div style={style.actions}>
+                                    <a 
+                                        href={`${profileUrl}/donate`} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        style={buttonStyle}
+                                    >
+                                        {ctaText}
+                                    </a>
+                                    
+                                    {profileUrl && (
+                                        <a 
+                                            href={profileUrl} 
+                                            target="_blank" 
+                                            rel="noopener noreferrer"
+                                            style={style.learnMore}
+                                        >
+                                            {__('Learn More', 'enpb')}
+                                        </a>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    );
+                
+                case 'minimal':
+                    return (
+                        <div style={style.container}>
+                            {logoUrl && (
+                                <img 
+                                    src={logoUrl} 
+                                    alt={name + " logo"} 
+                                    style={style.logo} 
+                                />
+                            )}
+                            
+                            <div style={style.content}>
+                                <h3 style={style.name}>{name}</h3>
+                                
+                                {showDescription && displayDescription && (
+                                    <p style={style.description}>{displayDescription}</p>
+                                )}
+                            </div>
+                            
+                            <a 
+                                href={`${profileUrl}/donate`} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                style={buttonStyle}
+                            >
+                                {ctaText}
+                            </a>
+                        </div>
+                    );
+                
+                case 'standard':
+                default:
+                    return (
+                        <div style={style.container}>
+                            <div style={style.header}>
+                                {logoUrl && (
+                                    <img 
+                                        src={logoUrl} 
+                                        alt={name + " logo"} 
+                                        style={style.logo} 
+                                    />
+                                )}
+                                
+                                <div>
+                                    <h3 style={style.name}>{name}</h3>
+                                    
+                                    {location && (
+                                        <div>
+                                            <span role="img" aria-label="Location">📍</span> {location}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                            
+                            {showDescription && displayDescription && (
+                                <p style={style.description}>{displayDescription}</p>
+                            )}
+                            
+                            {showTags && tags && tags.length > 0 && (
+                                <div style={style.tags}>
+                                    {tags.map((tag, index) => (
+                                        <span key={index} style={style.tag}>{tag}</span>
+                                    ))}
+                                </div>
+                            )}
+                            
+                            <div>
+                                <a 
+                                    href={`${profileUrl}/donate`} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    style={buttonStyle}
+                                >
+                                    {ctaText}
+                                </a>
+                                
+                                {profileUrl && (
+                                    <a 
+                                        href={profileUrl} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        style={{marginLeft: '10px'}}
+                                    >
+                                        {__('Learn More', 'enpb')}
+                                    </a>
+                                )}
+                            </div>
+                        </div>
+                    );
+            }
+        };
+        
+        // Block controls
+        const blockControls = (
+            <InspectorControls>
+                <PanelBody title={__('Profile Settings', 'enpb')} initialOpen={true}>
+                    <SelectControl
+                        label={__('Display Style', 'enpb')}
+                        value={attributes.blockStyle}
+                        options={[
+                            { label: __('Standard', 'enpb'), value: 'standard' },
+                            { label: __('Card', 'enpb'), value: 'card' },
+                            { label: __('Featured', 'enpb'), value: 'featured' },
+                            { label: __('Minimal', 'enpb'), value: 'minimal' },
+                        ]}
+                        onChange={(value) => setAttributes({ blockStyle: value })}
+                    />
+                    
+                    <TextControl
+                        label={__('Button Text', 'enpb')}
+                        value={attributes.ctaText}
+                        onChange={(value) => setAttributes({ ctaText: value })}
+                    />
+                    
+                    <div>
+                        <p>{__('Button Color', 'enpb')}</p>
+                        <ColorPalette
+                            value={attributes.ctaColor}
+                            onChange={(value) => setAttributes({ ctaColor: value })}
+                            disableCustomColors={false}
+                        />
+                    </div>
+                </PanelBody>
+                
+                <PanelBody title={__('Content Display', 'enpb')} initialOpen={false}>
+                    <ToggleControl
+                        label={__('Show Description', 'enpb')}
+                        checked={attributes.showDescription}
+                        onChange={(value) => setAttributes({ showDescription: value })}
+                    />
+                    
+                    {attributes.showDescription && (
+                        <RangeControl
+                            label={__('Description Length', 'enpb')}
+                            value={attributes.descriptionLength}
+                            onChange={(value) => setAttributes({ descriptionLength: value })}
+                            min={50}
+                            max={500}
+                            step={10}
+                        />
+                    )}
+                    
+                    <ToggleControl
+                        label={__('Show Tags', 'enpb')}
+                        checked={attributes.showTags}
+                        onChange={(value) => setAttributes({ showTags: value })}
+                    />
+                </PanelBody>
+                
+                {selectedNonprofit && (
+                    <PanelBody title={__('Nonprofit Information', 'enpb')} initialOpen={false}>
+                        <p>
+                            <strong>{__('Name:', 'enpb')}</strong> {attributes.name}
+                        </p>
+                        
+                        {attributes.location && (
+                            <p>
+                                <strong>{__('Location:', 'enpb')}</strong> {attributes.location}
+                            </p>
+                        )}
+                        
+                        <p>
+                            <Button 
+                                isSecondary
+                                isSmall
+                                onClick={resetSelection}
+                            >
+                                {__('Change Nonprofit', 'enpb')}
+                            </Button>
+                        </p>
+                    </PanelBody>
+                )}
+            </InspectorControls>
+        );
+        
+        // Main edit view
+        return (
+            <>
+                {blockControls}
+                
+                {!selectedNonprofit ? (
+                    <Placeholder
+                        icon="heart"
+                        label={__('Nonprofit Profile', 'enpb')}
+                        instructions={__('Search for and select a nonprofit organization from Every.org to display.', 'enpb')}
+                        className="enpb-placeholder"
+                    >
+                        <div className="enpb-search-container">
+                            <div className="enpb-search-controls">
+                                <div className="enpb-search-input-group">
+                                    <TextControl
+                                        placeholder={enpbData.strings.searchPlaceholder || __('Search for nonprofits by name or cause...', 'enpb')}
+                                        value={query}
+                                        onChange={handleQueryChange}
+                                    />
+                                    
+                                    {causes.length > 0 && (
+                                        <SelectControl
+                                            value={selectedCause}
+                                            options={causes}
+                                            onChange={handleCauseChange}
+                                        />
+                                    )}
+                                </div>
+                                
+                                <Button
+                                    isPrimary
+                                    onClick={searchNonprofits}
+                                    disabled={loading || query.length < 2}
+                                >
+                                    {loading ? <Spinner /> : __('Search', 'enpb')}
+                                </Button>
+                            </div>
+                            
+                            {searchError && (
+                                <div className="enpb-search-error">
+                                    {searchError}
+                                </div>
+                            )}
+                            
+                            {searchResults.length > 0 && (
+                                <div className="enpb-search-results">
+                                    <h3>{__('Select a Nonprofit:', 'enpb')}</h3>
+                                    <div className="enpb-results-list">
+                                        {searchResults.map((nonprofit) => (
+                                            <div 
+                                                key={nonprofit.id}
+                                                className="enpb-result-item"
+                                                onClick={() => selectNonprofit(nonprofit)}
+                                            >
+                                                {nonprofit.logoUrl && (
+                                                    <img 
+                                                        src={nonprofit.logoUrl} 
+                                                        alt={nonprofit.name + " logo"} 
+                                                        className="enpb-result-logo"
+                                                    />
+                                                )}
+                                                
+                                                <div className="enpb-result-info">
+                                                    <h4 className="enpb-result-name">{nonprofit.name}</h4>
+                                                    
+                                                    {nonprofit.location && (
+                                                        <div className="enpb-result-location">
+                                                            <span role="img" aria-label="Location">📍</span> {nonprofit.location}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </Placeholder>
+                ) : (
+                    <div className={`enpb-profile-preview enpb-style-${attributes.blockStyle}`}>
+                        {renderPreview()}
+                    </div>
+                )}
+            </>
+        );
+    },
+    
+    save: function() {
+        // Dynamic block, render handled by PHP
+        return null;
+    },
+});
