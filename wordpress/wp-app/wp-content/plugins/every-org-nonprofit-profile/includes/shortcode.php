@@ -85,6 +85,14 @@ function enpb_nonprofit_profile_shortcode($atts) {
     $nonprofit = $nonprofit_data['data']['nonprofit'];
     $tags = isset($nonprofit_data['data']['nonprofitTags']) ? $nonprofit_data['data']['nonprofitTags'] : [];
     
+    // Format URLs properly
+    $profileUrl = !empty($nonprofit['profileUrl']) ? $nonprofit['profileUrl'] : '';
+    $websiteUrl = !empty($nonprofit['websiteUrl']) ? $nonprofit['websiteUrl'] : '';
+    
+    // Remove any duplicate domains
+    $profileUrl = preg_replace('#^https?://[^/]+/https?://#', 'https://', $profileUrl);
+    $websiteUrl = preg_replace('#^https?://[^/]+/https?://#', 'https://', $websiteUrl);
+    
     // Prepare attributes for template
     $template_atts = [
         'nonprofitId' => $nonprofit['id'],
@@ -93,8 +101,8 @@ function enpb_nonprofit_profile_shortcode($atts) {
         'descriptionLong' => $nonprofit['descriptionLong'],
         'logoUrl' => $nonprofit['logoUrl'],
         'coverImageUrl' => $nonprofit['coverImageUrl'],
-        'profileUrl' => $nonprofit['profileUrl'],
-        'websiteUrl' => $nonprofit['websiteUrl'],
+        'profileUrl' => $profileUrl,
+        'websiteUrl' => $websiteUrl,
         'location' => $nonprofit['locationAddress'],
         'ein' => $nonprofit['ein'],
         'nteeCode' => $nonprofit['nteeCode'],

@@ -6,6 +6,10 @@
 if (!defined('ABSPATH')) {
     exit;
 }
+
+// Ensure URLs are properly formatted
+$profileUrl = !empty($nonprofit['profileUrl']) ? esc_url($nonprofit['profileUrl']) : '';
+$websiteUrl = !empty($nonprofit['websiteUrl']) ? esc_url($nonprofit['websiteUrl']) : '';
 ?>
 
 <div class="enpb-nonprofit-profile enpb-standard">
@@ -80,14 +84,14 @@ if (!defined('ABSPATH')) {
         <?php endif; ?>
 
         <div class="enpb-actions">
-            <?php if (!empty($nonprofit['websiteUrl'])): ?>
-                <a href="<?php echo esc_url($nonprofit['websiteUrl']); ?>" class="enpb-website-button" target="_blank" rel="noopener noreferrer">
+            <?php if ($websiteUrl): ?>
+                <a href="<?php echo $websiteUrl; ?>" class="enpb-website-button" target="_blank" rel="noopener noreferrer">
                     <?php _e('Visit Website', 'enpb'); ?>
                 </a>
             <?php endif; ?>
 
-            <?php if (!empty($nonprofit['profileUrl'])): ?>
-                <a href="<?php echo esc_url($nonprofit['profileUrl']); ?>" class="enpb-donate-button" target="_blank" rel="noopener noreferrer">
+            <?php if ($profileUrl): ?>
+                <a href="<?php echo $profileUrl; ?>" class="enpb-donate-button" target="_blank" rel="noopener noreferrer">
                     <?php echo esc_html($nonprofit['ctaText']); ?>
                 </a>
             <?php endif; ?>
