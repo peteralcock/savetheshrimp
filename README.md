@@ -22,7 +22,7 @@ This WordPress plugin provides an enhanced Gutenberg block and a shortcode to ea
 
 * WordPress 5.0 or higher (for Gutenberg block support)
 * PHP 7.0 or higher
-* An Every.org Public API Key (Get one from [Every.org Partners](https://partners.every.org))
+* An Every.org Public API Key (Get one from [Every.org](https://every.org))
 
 ## Installation
 
@@ -123,7 +123,7 @@ The `assets/js/frontend.js` file provides optional enhancements:
 
 
 
-# WordPress Plugin Market Strategy for Every.org 
+# WordPress Plugin Go-To-Market Strategy for Every.org 
 
 ## Introduction
 Every.org, a tech-for-good nonprofit, simplifies online giving by enabling donors to support over 1 million nonprofits through a single platform, with diverse payment methods like credit cards, cryptocurrency, stocks, and donor-advised funds (DAF). Its Charity API allows developers to create innovative giving experiences, making it a strong candidate for expanding into the WordPress plugin market. WordPress powers over 43% of websites, and many nonprofits rely on it for their online presence, presenting a significant opportunity for Every.org to reach developers and nonprofits. This report outlines a strategy for Every.org to develop and market a WordPress plugin, targeting developers to enhance its platform’s adoption and impact.
@@ -169,7 +169,7 @@ The primary audience is WordPress developers, including:
  - Agencies: Managing multiple nonprofit clients and needing scalable tools.
  - Nonprofit Staff: With basic WordPress knowledge, looking for plug-and-play solutions.
 
-Key Marketing Tactics
+#### Key Marketing Tactics
 
 WordPress.org Repository Listing:
 Submit the plugin to the WordPress.org plugin repository (WordPress Plugins) for maximum visibility, as it’s the primary source for WordPress users.
@@ -209,7 +209,7 @@ Highlight Every.org’s track record (e.g., $4.5 million raised for 1,600 nonpro
 
 
 
-Unique Selling Propositions (USPs)
+#### Unique Selling Propositions (USPs)
 
 Multi-Nonprofit Donations: Unlike most donation plugins, the plugin allows donors to support multiple nonprofits in one transaction.
 Advanced Payment Methods: Support for cryptocurrency, stocks, and DAF appeals to innovative nonprofits and donors.
@@ -217,60 +217,48 @@ No Platform Fees: Only third-party transaction fees (e.g., 2.2% + $0.30 for card
 Nonprofit Database: Access to over 1 million verified nonprofits simplifies setup for users.
 Mission Alignment: As a nonprofit, Every.org resonates with nonprofit users, fostering trust.
 
-Competitive Landscape
+#### Competitive Landscape
 The WordPress donation plugin market is competitive, with key players like GiveWP and Charitable. Below is a comparison to inform Every.org’s differentiation strategy:
-
-
 
 Feature
 Every.org Plugin (Proposed)
 GiveWP
 Charitable
 
-
-
 Multi-Nonprofit Donations
 Yes
 No
 No
-
 
 Payment Methods
 Crypto, stocks, DAF, standard
 Standard + limited crypto
 Standard
 
-
 Nonprofit Search
 Yes (1M+ nonprofits)
 Limited
 Limited
-
 
 Fundraiser Creation
 Yes
 Yes (add-on)
 Yes
 
-
 Platform Fees
 None
 None (add-on fees)
 None
-
 
 Open-Source
 Yes
 Yes
 Yes
 
-
 Developer Documentation
 Planned (extensive)
 Extensive
 Moderate
-
-
 
 GiveWP: Offers customizable forms, donor management, and add-ons for peer-to-peer fundraising, but lacks multi-nonprofit donations and advanced payment methods (GiveWP).
 Charitable: Focuses on simplicity and crowdfunding, but has fewer integrations and no nonprofit database.
@@ -301,22 +289,20 @@ Add advanced features (e.g., fundraiser management, detailed analytics).
 Expand partnerships with WordPress ecosystem players.
 Monitor adoption and refine marketing based on user data.
 
-
-
-Potential Challenges and Mitigations
+#### Potential Challenges and Mitigations
 
 Competition: Established plugins like GiveWP have large user bases. Mitigation: Emphasize unique features and leverage Every.org’s nonprofit credibility.
 Developer Adoption: Developers may resist switching from existing solutions. Mitigation: Offer migration guides and highlight ease of use.
 Technical Complexity: API integration and WordPress compatibility require expertise. Mitigation: Invest in quality development and testing.
 Awareness: As a newer player, Every.org may lack visibility. Mitigation: Aggressive community engagement and content marketing.
 
-Expected Outcomes
+#### Expected Outcomes
 
 Increased Adoption: Reach thousands of WordPress-based nonprofits, expanding Every.org’s user base.
 Developer Engagement: Build a loyal developer community through robust support and documentation.
 Enhanced Impact: Enable more nonprofits to raise funds efficiently, aligning with Every.org’s mission.
 Market Positioning: Establish Every.org as a key player in the WordPress donation plugin market.
 
-Conclusion
+#### Jerry's Final Thought
 Every.org can successfully break into the WordPress plugin market by developing a free, open-source plugin that leverages its Charity API to offer multi-nonprofit donation forms, nonprofit search, fundraiser creation, and advanced payment methods. By providing extensive documentation, engaging with the WordPress and nonprofit communities, and highlighting cost savings and mission alignment, Every.org can attract developers and nonprofits. Differentiating from competitors like GiveWP through unique features and a seamless user experience will ensure the plugin’s success, furthering Every.org’s goal of accelerating social impact.
 
