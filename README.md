@@ -1,4 +1,5 @@
 # Every.org Nonprofit Profile WordPress Plugin
+![Demo](screenshot.png)
 
 ## Description
 
